@@ -10,17 +10,12 @@ fs = 1_000_000
 def opening_script():
     f = Figlet(font='slant')
     print(Fore.RED + f.renderText("Signal Sentinel"))
-    print("A machine learning project aimed at passively detecting RF jamming attacks")
-    print("Designed to work on small form embedded systems for remote detection and response automation")
-    print("Josh Perryman Bcs(Hons) Cyber Security 2025\n")
-
     if check_rtl_sdr():
         print(Fore.GREEN + "RTL_SDR Device found")
     else:
         print(Fore.RED + "No RTL-SDR device found, please reinstall device and start again")
 
-    freq_hz = freq_select()
-    return freq_hz
+    print("Josh Perryman Bcs(Hons) Cyber Security 2025\n")
     
 
 def main(frequency):
@@ -95,6 +90,13 @@ def main(frequency):
         exit()
 
 
+def start_jam_detection():
+    opening_script()
+    start_mhz = float(input(Fore.GREEN + "Start frequency (MHz): "))
+    end_mhz = float(input(Fore.GREEN + "End frequency (MHz): "))
+    step_mhz = float(input(Fore.GREEN + "Step size (MHz): "))
+    jam_analyzer(start_mhz * 1e6, end_mhz * 1e6, step_mhz * 1e6)
+
+
 if __name__ == "__main__":
-    freq = opening_script()
-    main(freq)
+    start_jam_detection()
