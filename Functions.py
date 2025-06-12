@@ -343,3 +343,29 @@ def modelTest(sample_file, frequency, fs, rtl_gain):
     else:
         print(Fore.RED + f'The predicted classification is: {prediction_text}')
 
+
+def jam_analyzer(start_freq, end_freq, step_hz=1e6, seconds=2, rms_threshold=0.2):
+    """Simple jamming detector scanning a range of frequencies without
+    machine learning. A warning is printed when the RMS of the captured
+    signal exceeds ``rms_threshold``."""
+
+    current = start_freq
+    while current <= end_freq:
+        print(Fore.CYAN + f"Scanning {current/1e6:.2f} MHz...")
+        features = signalCapture(seconds, current)
+        if features is None:
+            print(Fore.RED + "Capture failed. Skipping frequency.")
+            current += step_hz
+            continue
+
+        rms = float(features['RMS'].iloc[0])
+        if rms > rms_threshold:
+            print(Fore.RED +
+                  f"Possible jamming detected at {current/1e6:.2f} MHz (RMS {rms:.2f})")
+        else:
+            print(Fore.GREEN +
+                  f"No jamming detected at {current/1e6:.2f} MHz (RMS {rms:.2f})")
+
+        current += step_hz
+
+
