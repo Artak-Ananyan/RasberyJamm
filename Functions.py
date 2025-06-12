@@ -352,6 +352,7 @@ def jam_analyzer(frequency, seconds=2, rms_threshold=0.2):
     learning models and simply compares the measured RMS power.
     """
 
+
     print(Fore.CYAN + f"Scanning {frequency/1e6:.2f} MHz...")
     features = signalCapture(seconds, frequency)
     if features is None:
@@ -372,6 +373,7 @@ def jam_analyzer(frequency, seconds=2, rms_threshold=0.2):
 
 
 def jam_analyzer_list(frequencies, seconds=2, rms_threshold=0.2):
+
     """Run :func:`jam_analyzer` on each frequency in ``frequencies``.
 
     The list can contain any number of discrete values, typically the preset
@@ -380,5 +382,6 @@ def jam_analyzer_list(frequencies, seconds=2, rms_threshold=0.2):
     """
     for freq in frequencies:
         jam_analyzer(freq, seconds=seconds, rms_threshold=rms_threshold)
+
 
 

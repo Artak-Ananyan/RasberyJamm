@@ -2,8 +2,8 @@ from Calculations import *
 from pyfiglet import Figlet
 from colorama import Fore
 import numpy as np
-
 from Functions import *
+
 
 # Frequencies to scan for potential jamming without machine learning
 PRESET_FREQUENCIES = [433e6, 868e6, 915e6, 2.437e9]
@@ -93,6 +93,7 @@ def main(frequency):
 
 def start_jam_detection():
     """Run the non-ML jam analyzer on :data:`PRESET_FREQUENCIES`."""
+
     opening_script()
     jam_analyzer_list(PRESET_FREQUENCIES)
 
