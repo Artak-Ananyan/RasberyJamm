@@ -41,7 +41,7 @@ def check_rtl_sdr():
 
 def signalCapture(seconds, frequency):
 
-    fs = 1e6
+    fs = DEFAULT_FS
     sdr = RtlSdr()
     rtl_gain = None
     captured_samples_np = None
@@ -49,7 +49,7 @@ def signalCapture(seconds, frequency):
     try:
         sdr.center_freq = frequency
         sdr.sample_rate = fs
-        sdr.gain = 28.0
+        sdr.gain = DEFAULT_RTL_GAIN
         time.sleep(0.5)
         rtl_gain = sdr.gain
 
