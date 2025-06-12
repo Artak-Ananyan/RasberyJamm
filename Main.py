@@ -2,7 +2,11 @@ from Calculations import *
 from pyfiglet import Figlet
 from colorama import Fore
 import numpy as np
+
 from Functions import *
+
+# Frequencies to scan for potential jamming without machine learning
+PRESET_FREQUENCIES = [433e6, 868e6, 915e6, 2.437e9]
 
 
 fs = 1_000_000
@@ -10,17 +14,12 @@ fs = 1_000_000
 def opening_script():
     f = Figlet(font='slant')
     print(Fore.RED + f.renderText("Signal Sentinel"))
-    print("A machine learning project aimed at passively detecting RF jamming attacks")
-    print("Designed to work on small form embedded systems for remote detection and response automation")
-    print("Josh Perryman Bcs(Hons) Cyber Security 2025\n")
-
     if check_rtl_sdr():
         print(Fore.GREEN + "RTL_SDR Device found")
     else:
         print(Fore.RED + "No RTL-SDR device found, please reinstall device and start again")
 
-    freq_hz = freq_select()
-    return freq_hz
+    print("Josh Perryman Bcs(Hons) Cyber Security 2025\n")
     
 
 def main(frequency):
@@ -95,6 +94,10 @@ def main(frequency):
         exit()
 
 
+def start_jam_detection():
+    opening_script()
+    jam_analyzer_list(PRESET_FREQUENCIES)
+
+
 if __name__ == "__main__":
-    freq = opening_script()
-    main(freq)
+    start_jam_detection()

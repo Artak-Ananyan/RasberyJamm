@@ -9,14 +9,12 @@ import pandas as pd
 
 
 colorama.init(autoreset=True)
-# settings for file location, converting the raw data to a complex64 number, sample rate and rtl gain
-# rtl is experimental needs to be adjusted when dongle is back in use
-file = 'iq_samples.dat'
-iq_data = np.fromfile(file, dtype=np.complex64)
-fs = 1_000_000
-rtl_gain = 28.0
-jam_file = 'Jamming_raw_iq.dat'
-jam_iq = np.fromfile(jam_file, dtype=np.complex64)
+
+# Default settings used when capturing samples. These can be overridden by the
+# calling code but defining them here avoids having to hardcode magic numbers
+# throughout the project.
+DEFAULT_FS = 1_000_000
+DEFAULT_RTL_GAIN = 28.0
 
 
 def calculate_snr(sample_file):
