@@ -222,7 +222,6 @@ def mat_to_dat(filename):
         iq_data.tofile(output_file)
         print(f"Saved mat file to {output_file}")
 
-mat_to_dat('/home/josh/Documents/SignalSentinel/Raw_IQ_Dataset/Testing/SingleFM/Testing_raw_1216.mat')
 
 def gen_jam_data(frequency, classification, jam_file):
     fs = 1_000_000
