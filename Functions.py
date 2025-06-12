@@ -344,33 +344,31 @@ def modelTest(sample_file, frequency, fs, rtl_gain):
         print(Fore.RED + f'The predicted classification is: {prediction_text}')
 
 
-def jam_analyzer(start_freq, end_freq, step_hz=1e6, seconds=2, rms_threshold=0.2):
-    """Simple jamming detector scanning a range of frequencies without
-    machine learning. A warning is printed when the RMS of the captured
-    signal exceeds ``rms_threshold``."""
+def jam_analyzer(frequency, seconds=2, rms_threshold=0.2):
+    """Simple jamming detector for a single ``frequency`` without machine
+    learning. A warning is printed when the RMS of the captured signal exceeds
+    ``rms_threshold``."""
 
-    current = start_freq
-    while current <= end_freq:
-        print(Fore.CYAN + f"Scanning {current/1e6:.2f} MHz...")
-        features = signalCapture(seconds, current)
-        if features is None:
-            print(Fore.RED + "Capture failed. Skipping frequency.")
-            current += step_hz
-            continue
+    print(Fore.CYAN + f"Scanning {frequency/1e6:.2f} MHz...")
+    features = signalCapture(seconds, frequency)
+    if features is None:
+        print(Fore.RED + "Capture failed. Skipping frequency.")
+        return
 
-        rms = float(features['RMS'].iloc[0])
-        if rms > rms_threshold:
-            print(Fore.RED +
-                  f"Possible jamming detected at {current/1e6:.2f} MHz (RMS {rms:.2f})")
-        else:
-            print(Fore.GREEN +
-                  f"No jamming detected at {current/1e6:.2f} MHz (RMS {rms:.2f})")
-
-        current += step_hz
+    rms = float(features['RMS'].iloc[0])
+    if rms > rms_threshold:
+        print(
+            Fore.RED
+            + f"Possible jamming detected at {frequency/1e6:.2f} MHz (RMS {rms:.2f})"
+        )
+    else:
+        print(
+            Fore.GREEN
+            + f"No jamming detected at {frequency/1e6:.2f} MHz (RMS {rms:.2f})"
+        )
 
 
 def jam_analyzer_list(frequencies, seconds=2, rms_threshold=0.2):
     """Run ``jam_analyzer`` on a list of discrete ``frequencies``."""
     for freq in frequencies:
-        jam_analyzer(freq, freq, step_hz=1, seconds=seconds,
-                     rms_threshold=rms_threshold)
+        jam_analyzer(freq, seconds=seconds, rms_threshold=rms_threshold)
