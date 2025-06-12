@@ -18,3 +18,13 @@
 
 Tools and scripts used to collect signal data and run the jamming detection
 model on a Raspberry Pi.
+
+## Quick start
+
+To scan the default frequencies for possible RF jamming without machine learning, run:
+
+```bash
+python Main.py
+```
+
+This executes `jam_analyzer_list` on the preset frequencies `433e6`, `868e6`, `915e6`, and `2.437e9`.

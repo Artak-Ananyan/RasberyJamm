@@ -2,8 +2,8 @@ from Calculations import *
 from pyfiglet import Figlet
 from colorama import Fore
 import numpy as np
-from Functions import *
 
+from Functions import *
 
 # Frequencies to scan for potential jamming without machine learning
 PRESET_FREQUENCIES = [433e6, 868e6, 915e6, 2.437e9]
