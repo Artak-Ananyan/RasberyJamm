@@ -29,7 +29,7 @@ def get_signal(seconds, frequency):
 
     try:
         sdr.center_freq = frequency  
-        sdr.sample_rate = 1e6  
+        sdr.sample_rate = DEFAULT_FS
         sdr.gain = 'auto'  
 
         total_samples = int(seconds * sdr.sample_rate)  
@@ -75,15 +75,15 @@ def view_CSV(file_path, num_rows):
 
 def rolling_window(seconds, frequency, classification):
 
-    fs = 1_000_000
+    fs = DEFAULT_FS
     sdr = RtlSdr()
     rtl_gain = None
     captured_samples_np = None
 
     try:
         freq = sdr.center_freq = frequency
-        fs = sdr.fs = 1e6
-        sdr.gain = 28.0
+        fs = sdr.fs = DEFAULT_FS
+        sdr.gain = DEFAULT_RTL_GAIN
         time.sleep(0.5)
         rtl_gain = sdr.gain
 
@@ -118,15 +118,15 @@ def rolling_window(seconds, frequency, classification):
 
 
 def signalCapture(seconds, frequency):
-    fs = 1_000_000
+    fs = DEFAULT_FS
     sdr = RtlSdr()
     rtl_gain = None
     captured_samples_np = None
 
     try:
         freq = sdr.center_freq = frequency
-        fs = sdr.fs = 1e6
-        sdr.gain = 28.0
+        fs = sdr.fs = DEFAULT_FS
+        sdr.gain = DEFAULT_RTL_GAIN
         time.sleep(0.5)
         rtl_gain = sdr.gain
 
@@ -164,7 +164,7 @@ def visualise_signal(file, freq_hz):
 
     samples = np.fromfile(file, dtype=np.complex64)
 
-    fs = 1e6
+    fs = DEFAULT_FS
     fc = freq_hz
 
     N = len(samples)
@@ -222,10 +222,9 @@ def mat_to_dat(filename):
         iq_data.tofile(output_file)
         print(f"Saved mat file to {output_file}")
 
-mat_to_dat('/home/josh/Documents/SignalSentinel/Raw_IQ_Dataset/Testing/SingleFM/Testing_raw_1216.mat')
 
 def gen_jam_data(frequency, classification, jam_file):
-    fs = 1_000_000
+    fs = DEFAULT_FS
     jam_iq = np.fromfile(jam_file, dtype=np.complex64)
     feature_extraction(jam_iq, frequency)
     export_csv(jam_iq, frequency, fs, classification)
@@ -287,7 +286,7 @@ def auto_jam(folder_path, num_files):
             return output_file
         
     def gen_jam_data(frequency, classification, jam_file):
-        fs = 1_000_000
+        fs = DEFAULT_FS
         jam_iq = np.fromfile(jam_file, dtype=np.complex64)
         feature_extraction(jam_iq, frequency)
         export_csv(jam_iq, frequency, fs, classification)
@@ -343,4 +342,35 @@ def modelTest(sample_file, frequency, fs, rtl_gain):
         print(Fore.GREEN + f'The predicted classification is: {prediction_text}')
     else:
         print(Fore.RED + f'The predicted classification is: {prediction_text}')
+
+
+def jam_analyzer(frequency, seconds=2, rms_threshold=0.2):
+    """Simple jamming detector for a single ``frequency`` without machine
+    learning. A warning is printed when the RMS of the captured signal exceeds
+    ``rms_threshold``."""
+
+    print(Fore.CYAN + f"Scanning {frequency/1e6:.2f} MHz...")
+    features = signalCapture(seconds, frequency)
+    if features is None:
+        print(Fore.RED + "Capture failed. Skipping frequency.")
+        return
+
+    rms = float(features['RMS'].iloc[0])
+    if rms > rms_threshold:
+        print(
+            Fore.RED
+            + f"Possible jamming detected at {frequency/1e6:.2f} MHz (RMS {rms:.2f})"
+        )
+    else:
+        print(
+            Fore.GREEN
+            + f"No jamming detected at {frequency/1e6:.2f} MHz (RMS {rms:.2f})"
+        )
+
+
+def jam_analyzer_list(frequencies, seconds=2, rms_threshold=0.2):
+    """Run ``jam_analyzer`` on a list of discrete ``frequencies``."""
+    for freq in frequencies:
+        jam_analyzer(freq, seconds=seconds, rms_threshold=rms_threshold)
+
 
