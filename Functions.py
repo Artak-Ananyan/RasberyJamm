@@ -344,11 +344,14 @@ def modelTest(sample_file, frequency, fs, rtl_gain):
         print(Fore.RED + f'The predicted classification is: {prediction_text}')
 
 
-
 def jam_analyzer(frequency, seconds=2, rms_threshold=0.2):
-    """Simple jamming detector for a single ``frequency`` without machine
-    learning. A warning is printed when the RMS of the captured signal exceeds
-    ``rms_threshold``."""
+    """Check one ``frequency`` for possible jamming.
+
+    This helper captures ``seconds`` of IQ data and prints a warning if the
+    calculated RMS level is above ``rms_threshold``. The check uses no machine
+    learning models and simply compares the measured RMS power.
+    """
+
 
     print(Fore.CYAN + f"Scanning {frequency/1e6:.2f} MHz...")
     features = signalCapture(seconds, frequency)
@@ -370,6 +373,15 @@ def jam_analyzer(frequency, seconds=2, rms_threshold=0.2):
 
 
 def jam_analyzer_list(frequencies, seconds=2, rms_threshold=0.2):
-    """Run ``jam_analyzer`` on a list of discrete ``frequencies``."""
+
+    """Run :func:`jam_analyzer` on each frequency in ``frequencies``.
+
+    The list can contain any number of discrete values, typically the preset
+    frequencies defined in :mod:`Main`. Each frequency is scanned in turn using
+    the same ``seconds`` and ``rms_threshold`` parameters.
+    """
     for freq in frequencies:
         jam_analyzer(freq, seconds=seconds, rms_threshold=rms_threshold)
+
+
+

@@ -2,14 +2,11 @@ from Calculations import *
 from pyfiglet import Figlet
 from colorama import Fore
 import numpy as np
-
 from Functions import *
+
 
 # Frequencies to scan for potential jamming without machine learning
 PRESET_FREQUENCIES = [433e6, 868e6, 915e6, 2.437e9]
-
-
-fs = 1_000_000
 
 def opening_script():
     f = Figlet(font='slant')
@@ -71,7 +68,7 @@ def main(frequency):
                 file = 'iq_samples.dat'
                 iq_data = np.fromfile(file, dtype=np.complex64)
                 rtl_gain = 30 
-                modelTest(iq_data, freq_hz, fs, rtl_gain)
+                modelTest(iq_data, freq_hz, DEFAULT_FS, rtl_gain)
 
                 input(Fore.GREEN + "\nPress Enter to return to the menu...")
                 continue
@@ -80,7 +77,7 @@ def main(frequency):
                 test_file = input(Fore.GREEN + "Choose a file to test with: ")
                 iqfile = np.fromfile(test_file, dtype=np.complex64)
                 rtl_gain = 30
-                modelTest(iqfile, freq_hz, fs, rtl_gain)
+                modelTest(iqfile, freq_hz, DEFAULT_FS, rtl_gain)
 
             elif option == 5:
                 print(Fore.RED + f.renderText("Exiting"))
@@ -95,6 +92,8 @@ def main(frequency):
 
 
 def start_jam_detection():
+    """Run the non-ML jam analyzer on :data:`PRESET_FREQUENCIES`."""
+
     opening_script()
     jam_analyzer_list(PRESET_FREQUENCIES)
 
