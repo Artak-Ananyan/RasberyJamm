@@ -93,6 +93,7 @@ def main(frequency):
 
 def start_jam_detection():
     """Run the non-ML jam analyzer on :data:`PRESET_FREQUENCIES`."""
+
     opening_script()
     jam_analyzer_list(PRESET_FREQUENCIES)
 
