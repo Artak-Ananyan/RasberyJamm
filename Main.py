@@ -99,5 +99,6 @@ def start_jam_detection():
     jam_analyzer_list(PRESET_FREQUENCIES)
 
 
+
 if __name__ == "__main__":
     start_jam_detection()

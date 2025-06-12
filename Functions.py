@@ -343,7 +343,6 @@ def modelTest(sample_file, frequency, fs, rtl_gain):
     else:
         print(Fore.RED + f'The predicted classification is: {prediction_text}')
 
-
 def jam_analyzer(frequency, seconds=2, rms_threshold=0.2):
     """Simple jamming detector for a single ``frequency`` without machine
     learning. A warning is printed when the RMS of the captured signal exceeds
@@ -372,5 +371,6 @@ def jam_analyzer_list(frequencies, seconds=2, rms_threshold=0.2):
     """Run ``jam_analyzer`` on a list of discrete ``frequencies``."""
     for freq in frequencies:
         jam_analyzer(freq, seconds=seconds, rms_threshold=rms_threshold)
+
 
 
