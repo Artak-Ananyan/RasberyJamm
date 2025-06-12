@@ -2,7 +2,11 @@ from Calculations import *
 from pyfiglet import Figlet
 from colorama import Fore
 import numpy as np
+
 from Functions import *
+
+# Frequencies to scan for potential jamming without machine learning
+PRESET_FREQUENCIES = [433e6, 868e6, 915e6, 2.437e9]
 
 
 fs = 1_000_000
@@ -92,10 +96,7 @@ def main(frequency):
 
 def start_jam_detection():
     opening_script()
-    start_mhz = float(input(Fore.GREEN + "Start frequency (MHz): "))
-    end_mhz = float(input(Fore.GREEN + "End frequency (MHz): "))
-    step_mhz = float(input(Fore.GREEN + "Step size (MHz): "))
-    jam_analyzer(start_mhz * 1e6, end_mhz * 1e6, step_mhz * 1e6)
+    jam_analyzer_list(PRESET_FREQUENCIES)
 
 
 if __name__ == "__main__":
