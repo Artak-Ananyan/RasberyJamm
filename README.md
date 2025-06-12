@@ -15,4 +15,6 @@
   ---
  
 # RasberyJamm
-# RasberyJamm
+
+Tools and scripts used to collect signal data and run the jamming detection
+model on a Raspberry Pi.

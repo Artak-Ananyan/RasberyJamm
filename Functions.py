@@ -77,13 +77,15 @@ def rolling_window(seconds, frequency, classification):
 
     fs = 1_000_000
     sdr = RtlSdr()
+    rtl_gain = None
+    captured_samples_np = None
 
     try:
         freq = sdr.center_freq = frequency
         fs = sdr.fs = 1e6
         sdr.gain = 28.0
         time.sleep(0.5)
-        rtl_gain = sdr.gain  
+        rtl_gain = sdr.gain
 
         total_samples = int(seconds * fs)
         chunk_size = 256 * 1024
@@ -102,9 +104,13 @@ def rolling_window(seconds, frequency, classification):
         output_path = 'iq_samples.dat'
         captured_samples_np.tofile(output_path)
 
+    except Exception as e:
+        print(Fore.RED + f"Error capturing samples: {e}")
+
     finally:
         sdr.close()
 
+    if captured_samples_np is not None and rtl_gain is not None:
         file = 'iq_samples.dat'
         iq_data = np.fromfile(file, dtype=np.complex64)
         feature_extraction(iq_data, frequency, fs, rtl_gain)
@@ -114,13 +120,15 @@ def rolling_window(seconds, frequency, classification):
 def signalCapture(seconds, frequency):
     fs = 1_000_000
     sdr = RtlSdr()
+    rtl_gain = None
+    captured_samples_np = None
 
     try:
         freq = sdr.center_freq = frequency
         fs = sdr.fs = 1e6
         sdr.gain = 28.0
         time.sleep(0.5)
-        rtl_gain = sdr.gain  
+        rtl_gain = sdr.gain
 
         total_samples = int(seconds * fs)
         chunk_size = 256 * 1024
@@ -138,8 +146,14 @@ def signalCapture(seconds, frequency):
         captured_samples_np = np.array(captured_samples, dtype=np.complex64)
         captured_samples_np.tofile('iq_samples.dat')
 
+    except Exception as e:
+        print(Fore.RED + f"Error capturing signal: {e}")
+
     finally:
         sdr.close()
+
+    if captured_samples_np is None or rtl_gain is None:
+        return None
 
     features = feature_extraction(captured_samples_np, frequency, fs, rtl_gain)
     return features

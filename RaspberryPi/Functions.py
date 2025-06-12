@@ -40,15 +40,18 @@ def check_rtl_sdr():
 
 
 def signalCapture(seconds, frequency):
-    
+
     fs = 1e6
     sdr = RtlSdr()
+    rtl_gain = None
+    captured_samples_np = None
 
     try:
         sdr.center_freq = frequency
         sdr.sample_rate = fs
         sdr.gain = 28.0
         time.sleep(0.5)
+        rtl_gain = sdr.gain
 
         end_time = time.time() + seconds
         captured_samples = []
@@ -61,10 +64,16 @@ def signalCapture(seconds, frequency):
         captured_samples_np = np.array(captured_samples, dtype=np.complex64)
         captured_samples_np.tofile('iq_samples.dat')
 
+    except Exception as e:
+        print(Fore.RED + f"Error capturing signal: {e}")
+
     finally:
         sdr.close()
 
-    features = feature_extraction(captured_samples_np, frequency, fs, sdr.gain)
+    if captured_samples_np is None or rtl_gain is None:
+        return None
+
+    features = feature_extraction(captured_samples_np, frequency, fs, rtl_gain)
     return features
 
 
