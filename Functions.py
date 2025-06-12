@@ -29,7 +29,7 @@ def get_signal(seconds, frequency):
 
     try:
         sdr.center_freq = frequency  
-        sdr.sample_rate = 1e6  
+        sdr.sample_rate = DEFAULT_FS
         sdr.gain = 'auto'  
 
         total_samples = int(seconds * sdr.sample_rate)  
@@ -75,15 +75,15 @@ def view_CSV(file_path, num_rows):
 
 def rolling_window(seconds, frequency, classification):
 
-    fs = 1_000_000
+    fs = DEFAULT_FS
     sdr = RtlSdr()
     rtl_gain = None
     captured_samples_np = None
 
     try:
         freq = sdr.center_freq = frequency
-        fs = sdr.fs = 1e6
-        sdr.gain = 28.0
+        fs = sdr.fs = DEFAULT_FS
+        sdr.gain = DEFAULT_RTL_GAIN
         time.sleep(0.5)
         rtl_gain = sdr.gain
 
@@ -118,15 +118,15 @@ def rolling_window(seconds, frequency, classification):
 
 
 def signalCapture(seconds, frequency):
-    fs = 1_000_000
+    fs = DEFAULT_FS
     sdr = RtlSdr()
     rtl_gain = None
     captured_samples_np = None
 
     try:
         freq = sdr.center_freq = frequency
-        fs = sdr.fs = 1e6
-        sdr.gain = 28.0
+        fs = sdr.fs = DEFAULT_FS
+        sdr.gain = DEFAULT_RTL_GAIN
         time.sleep(0.5)
         rtl_gain = sdr.gain
 
@@ -164,7 +164,7 @@ def visualise_signal(file, freq_hz):
 
     samples = np.fromfile(file, dtype=np.complex64)
 
-    fs = 1e6
+    fs = DEFAULT_FS
     fc = freq_hz
 
     N = len(samples)
@@ -224,7 +224,7 @@ def mat_to_dat(filename):
 
 
 def gen_jam_data(frequency, classification, jam_file):
-    fs = 1_000_000
+    fs = DEFAULT_FS
     jam_iq = np.fromfile(jam_file, dtype=np.complex64)
     feature_extraction(jam_iq, frequency)
     export_csv(jam_iq, frequency, fs, classification)
@@ -286,7 +286,7 @@ def auto_jam(folder_path, num_files):
             return output_file
         
     def gen_jam_data(frequency, classification, jam_file):
-        fs = 1_000_000
+        fs = DEFAULT_FS
         jam_iq = np.fromfile(jam_file, dtype=np.complex64)
         feature_extraction(jam_iq, frequency)
         export_csv(jam_iq, frequency, fs, classification)
