@@ -97,6 +97,10 @@ def main(frequency):
 def start_jam_detection():
     opening_script()
     jam_analyzer_list(PRESET_FREQUENCIES)
+    start_mhz = float(input(Fore.GREEN + "Start frequency (MHz): "))
+    end_mhz = float(input(Fore.GREEN + "End frequency (MHz): "))
+    step_mhz = float(input(Fore.GREEN + "Step size (MHz): "))
+    jam_analyzer(start_mhz * 1e6, end_mhz * 1e6, step_mhz * 1e6)
 
 
 if __name__ == "__main__":

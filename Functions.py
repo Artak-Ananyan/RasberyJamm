@@ -374,5 +374,3 @@ def jam_analyzer_list(frequencies, seconds=2, rms_threshold=0.2):
     for freq in frequencies:
         jam_analyzer(freq, freq, step_hz=1, seconds=seconds,
                      rms_threshold=rms_threshold)
-
-
